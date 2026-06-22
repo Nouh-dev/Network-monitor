@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<section class="assets-page">
+
+    <h1>Alerts Management</h1>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Device</th>
+                <th>Alert Type</th>
+                <th>Severity</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>10:30 AM</td>
+                <td>Server-01</td>
+                <td>Offline</td>
+                <td>Critical</td>
+                <td>Open</td>
+            </tr>
+
+            <tr>
+                <td>11:15 AM</td>
+                <td>Router-HQ</td>
+                <td>High CPU</td>
+                <td>Warning</td>
+                <td>Investigating</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</section>
+
+{% endblock %}

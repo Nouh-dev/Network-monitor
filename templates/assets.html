@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="assets-page">
+
+    <h1>Assets Management</h1>
+
+    <div class="asset-stats">
+
+        <div class="card">
+            <h3>Total Assets</h3>
+            <p>1250</p>
+        </div>
+
+        <div class="card">
+            <h3>Online Assets</h3>
+            <p>1180</p>
+        </div>
+
+        <div class="card">
+            <h3>Offline Assets</h3>
+            <p>70</p>
+        </div>
+
+    </div>
+
+    <div class="toolbar">
+        <input type="text" placeholder="Search Device">
+
+        <button>Add Asset</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Device Name</th>
+                <th>Type</th>
+                <th>IP Address</th>
+                <th>MAC Address</th>
+                <th>Status</th>
+                <th>Last Seen</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>Server-01</td>
+                <td>Server</td>
+                <td>192.168.1.10</td>
+                <td>00:1A:2B:3C</td>
+                <td>Online</td>
+                <td>1 min ago</td>
+                <td>
+                    <button>View</button>
+                </td>
+            </tr>
+
+            <td>
+                <span class="status online">Online</span>
+            </td>
+            
+            <td>
+                <button class="action-btn">View Details</button>
+            </td>
+
+        </tbody>
+    </table>
+
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+flask
+pysnmp
+psutil
+scapy
+apscheduler
+getmac
+openpyxl
+reportlab

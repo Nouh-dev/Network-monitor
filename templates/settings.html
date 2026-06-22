@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<section class="assets-page">
+
+    <h1>System Settings</h1>
+
+    <div class="card">
+
+        <h3>Scan Interval</h3>
+        <input type="text" value="5 Minutes">
+
+        <br><br>
+
+        <h3>Notification Settings</h3>
+        <input type="checkbox"> Email Alerts
+
+        <br><br>
+
+        <h3>Theme Settings</h3>
+        <select>
+            <option>Light</option>
+            <option>Dark</option>
+        </select>
+
+        <br><br>
+
+        <h3>Company Information</h3>
+        <input type="text" value="Logistics Company">
+
+    </div>
+
+</section>
+
+{% endblock %}

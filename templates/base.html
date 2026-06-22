@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Monitor</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<aside class="sidebar">
+
+        <ul>
+            <li>
+                <a href="{{ url_for('dashboard') }}">
+                    <span class="icon">📊</span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('assets') }}">
+                    <span class="icon">🖥️</span>
+                    <span class="text">Assets</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('network') }}">
+                    <span class="icon">🌐</span>
+                    <span class="text">Network</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('alerts') }}">
+                    <span class="icon">🚨</span>
+                    <span class="text">Alerts</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('reports') }}">
+                    <span class="icon">📑</span>
+                    <span class="text">Reports</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('settings') }}">
+                    <span class="icon">⚙️</span>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+
+    <main class="main">
+        {% block body %}
+        {% endblock %}
+    </main>
+
+
+</body>
+</html>
