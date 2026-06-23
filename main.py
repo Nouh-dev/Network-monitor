@@ -1,31 +1,32 @@
-from flask import Flask, render_template
+import scapy.all as scapy 
+import socket
 
-app = Flask(__name__)
+my_ip = socket.gethostbyname(socket.getfqdn())
 
-@app.route("/")
-def dashboard():
-    return render_template("index.html")
+#print(my_ip)
 
-@app.route("/assets")
-def assets():
-    return render_template("assets.html")
+def get_ip():
+    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
-@app.route("/network")
-def network():
-    return render_template("network.html")
+    try:
+        s.connect(("10.255.255.255",1))
+        local_ip = s.getsockname()[0]
+    except:
+        local_ip = "127.0.0.1"
+    finally:
+        s.close()
+    parts = local_ip.split(".")
+    local_ip =f"{parts[0]}.{parts[1]}.{parts[2]}.0/24"
 
-@app.route("/alerts")
-def alerts():
-    return render_template("alerts.html")
+    return local_ip
 
-@app.route("/reports")
-def reports():
-    return render_template("reports.html")
 
-@app.route("/settings")
-def settings():
-    return render_template("settings.html")
+def scanner(ip):
+    scapy.arping(ip)
 
-if __name__ == "__main__":
-    app.run(debug=True)
 
+ip=get_ip()
+
+print(ip)
+
+scanner(ip)
