@@ -77,6 +77,8 @@ def scanner(network):
             "status": "Online",
             "vendor": vendor
         })
+        status= "Online"
+        save_device(ip, mac, hostname, "Online", vendor)
 
     return devices
 
@@ -91,7 +93,6 @@ def home():
 def scan():
 
     devices = scanner(ip)
-
     return render_template("index.html", devices=devices)
 
 

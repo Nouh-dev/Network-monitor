@@ -10,12 +10,13 @@ cursor.execute("""
                ip TEXT UNIQUE,
                mac TEXT,
                hostname TEXT,
-               status TEXT
+               status TEXT,
+               vendor TEXT
                 )  
 """)
 
 
-def save_device(ip,mac,hostname,status):
+def save_device(ip,mac,hostname,status,vendor):
     conn = sqlite3.connect("network.db")
 
     cursor = conn.cursor()
@@ -25,13 +26,13 @@ def save_device(ip,mac,hostname,status):
     if exists:
         cursor.execute("""
                         UPDATE assets
-                        SET mac = ? ,hostname = ?,status = ?
-                        WHERE ip=? """,(ip,mac,hostname,status))
+                        SET mac = ? ,hostname = ?,status = ?,vendor=?
+                        WHERE ip=? """,(ip,mac,hostname,status,vendor))
     
     else:
         cursor.execute(""" 
-                    INSERT INTO assets(ip,mac,hostname,status)
-                    VALUES (?,?,?,?)""",(ip,mac,hostname,status))
+                    INSERT INTO assets(ip,mac,hostname,status,vendor)
+                    VALUES (?,?,?,?,?)""",(ip,mac,hostname,status,vendor))
     conn.commit()
     conn.close()
 
