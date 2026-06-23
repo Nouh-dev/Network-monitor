@@ -1,5 +1,14 @@
 import scapy.all as scapy 
 import socket
+import sqlite3
+from database import save_device
+from flask import Flask , render_template, request,redirect ,url_for
+from scapy.all import conf
+
+app = Flask(__name__)
+
+
+
 
 my_ip = socket.gethostbyname(socket.getfqdn())
 
@@ -21,12 +30,70 @@ def get_ip():
     return local_ip
 
 
-def scanner(ip):
-    scapy.arping(ip)
-
-
 ip=get_ip()
 
-print(ip)
+#print(ip)
 
-scanner(ip)
+
+def get_assets():
+    conn = sqlite3.connect("network.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM assets")
+    data = cursor.fetchall()
+    conn.close()
+    return data 
+
+
+assets = get_assets()
+#print(assets)
+
+
+def get_hostname(ip):
+    try:
+        return socket.gethostbyaddr(ip)[0]
+    except:
+        return None
+
+devices =[]
+def scanner(network):
+
+    result = scapy.arping(network)[0]
+    global devices
+    devices.clear()
+
+    for sent, received in result:
+
+        ip = received.psrc
+        mac = received.hwsrc
+
+        hostname = get_hostname(ip)
+        vendor = conf.manufdb._resolve_MAC(mac)
+
+        devices.append({
+            "ip": ip,
+            "mac": mac,
+            "hostname": hostname,
+            "status": "Online",
+            "vendor": vendor
+        })
+
+    return devices
+
+#scanner(ip)
+
+@app.route("/")
+def home():
+    return render_template("base.html", devices=[])
+
+
+@app.route("/scan")
+def scan():
+
+    devices = scanner(ip)
+
+    return render_template("index.html", devices=devices)
+
+
+app.run(debug=True)
+

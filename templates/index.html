@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+<br><br>
+{% if devices %}
+<table border="1" width="100%" cellpadding="10" class="table">
+    <tr>
+        <th>IP</th>
+        <th>MAC</th>
+        <th>Hostname</th>
+        <th>Status</th>
+        <th>Vendor</th>
+    </tr>
+
+    {% for d in devices %}
+    <tr>
+        <td>{{ d.ip }}</td>
+        <td>{{ d.mac }}</td>
+        <td>{{ d.hostname }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.vendor }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% endif %}
+{% endblock %}
