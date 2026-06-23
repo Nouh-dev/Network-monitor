@@ -9,9 +9,6 @@ app = Flask(__name__)
 
 
 
-
-my_ip = socket.gethostbyname(socket.getfqdn())
-
 #print(my_ip)
 
 def get_ip():
