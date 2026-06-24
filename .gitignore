@@ -1,10 +1,8 @@
 network.db
 
-.vscode/
+*.pyc
+__pycache__/
 
-database.py
-
-.gitignore
 
 
 

@@ -4,6 +4,9 @@ import sqlite3
 from database import save_device
 from flask import Flask , render_template, request,redirect ,url_for
 from scapy.all import conf
+from scan_ports import scan_port
+import nmap
+
 
 app = Flask(__name__)
 
@@ -12,7 +15,7 @@ app = Flask(__name__)
 #print(my_ip)
 
 def get_ip():
-    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) # créer une IPv4 et UDP
 
     try:
         s.connect(("10.255.255.255",1))
@@ -63,21 +66,57 @@ def scanner(network):
 
         ip = received.psrc
         mac = received.hwsrc
-
+        os_name = detecter_os(ip)
         hostname = get_hostname(ip)
         vendor = conf.manufdb._resolve_MAC(mac)
+        
+        open_ports = scan_port(ip)
+        status_port = "OPEN" if open_ports else "CLOSED"
+        ports = " | ".join(open_ports)
+        print(vendor,ports,status_port,"\n",os_name)
+        print("__________________________________________________________________________________")
 
         devices.append({
             "ip": ip,
             "mac": mac,
             "hostname": hostname,
             "status": "Online",
-            "vendor": vendor
+            "os_name": os_name,
+            "vendor": vendor,
+            "ports": "<br>".join(open_ports),
+            "status_port":status_port
         })
-        status= "Online"
-        save_device(ip, mac, hostname, "Online", vendor)
+        ports_str = ", ".join(open_ports)
+        save_device(ip, mac, hostname, "Online",os_name,vendor,ports_str,status_port)
 
     return devices
+
+#detercer os_name 
+
+def detecter_os(target):
+    scanner = nmap.PortScanner(
+        nmap_search_path=(
+            r"C:\Program Files (x86)\Nmap\nmap.exe",
+        )
+    )
+
+    scanner.scan(target, arguments="-O --host-timeout 10s ")
+
+    for host in scanner.all_hosts():
+
+        os_matches = scanner[host].get("osmatch", [])
+
+        if len(os_matches) > 0:
+
+            best_os = os_matches[0]
+
+            return best_os["name"]
+
+    return "Unknown"
+
+
+
+
 
 #scanner(ip)
 
