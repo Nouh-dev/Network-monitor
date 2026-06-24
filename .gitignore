@@ -4,8 +4,7 @@ network.db
 
 database.py
 
-.__pycache__/*.pyc
-
+.gitignore
 
 
 
