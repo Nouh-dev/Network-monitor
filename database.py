@@ -19,7 +19,7 @@ cursor.execute("""
 """)
 
 
-def save_device(ip,mac,hostname,status,vendor,ports,status_port,os_name):
+def save_device(ip,mac,hostname,status,os_name,vendor,ports,status_port):
     conn = sqlite3.connect("network.db")
 
     cursor = conn.cursor()

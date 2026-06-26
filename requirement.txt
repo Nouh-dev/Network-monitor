@@ -7,6 +7,9 @@ getmac
 openpyxl
 reportlab
 nmap
+networkx
+matplotlib
+pyvis
 
 # install nmap app
 # install ncap app 

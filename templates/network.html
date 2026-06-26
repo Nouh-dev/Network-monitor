@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: white;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "gray", "id": "internet", "image": "static/icons/internet.png", "label": " Internet", "physics": false, "shape": "image", "x": 0, "y": -800}, {"color": "gray", "id": "router", "image": "static/icons/router.png", "label": " Router", "physics": false, "shape": "image", "size": 30, "x": 0, "y": -100}, {"color": "gray", "id": "grandstream", "image": "static/icons/grandstream.png", "label": "Grandstream", "physics": false, "shape": "image", "size": 60, "x": 0, "y": 150}, {"color": "red", "id": "firewall", "image": "static/icons/firewall.png", "label": " Firewall", "physics": false, "shape": "image", "size": 30, "x": 0, "y": -600}, {"color": "blue", "id": "switch1", "image": "static/icons/switch.png", "label": " Switch 1", "physics": false, "shape": "image", "x": -400, "y": -350}, {"color": "blue", "id": "switch2", "image": "static/icons/switch.png", "label": " Switch 2", "physics": false, "shape": "image", "x": 0, "y": 400}, {"color": "blue", "id": "switch3", "image": "static/icons/switch.png", "label": " Switch 3", "physics": false, "shape": "image", "x": 0, "y": 850}, {"color": "lightgray", "id": "192.168.10.1", "image": "static/icons/unkhown.png", "label": "192.168.10.1", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.1 \n    MAC : 00:0b:82:e0:8b:2b\n    Hostname : \n    Vendor : GRANDSTREAMN:E0:8B:2B\n    OS : UNKNOWN\n    Ports : 2 2   S S H     |   5 3   D O M A I N     |   8 0   H T T P     |   4 4 3   H T T P S     |   4 4 5   M I C R O S O F T - D S   ", "x": -1140.0, "y": 770}, {"color": "lime", "id": "192.168.10.4", "image": "static/icons/pc.png", "label": "IT-MSL-DESKTOP", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.4 \n    MAC : e8:cf:83:56:f7:56\n    Hostname : IT-MSL-DESKTOP\n    Vendor : E8:CF:83:56:F7:56\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S     |   3 3 8 9   M S - W B T - S E R V E R   ", "x": -1020.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.5", "image": "static/icons/unkhown.png", "label": "192.168.10.5", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.5 \n    MAC : 40:ae:30:8d:52:97\n    Hostname : \n    Vendor : TPLINKPTE:8D:52:97\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S   ", "x": -900.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.10", "image": "static/icons/unkhown.png", "label": "192.168.10.10", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.10 \n    MAC : 94:ff:3c:66:e9:7f\n    Hostname : \n    Vendor : FORTINET:66:E9:7F\n    OS : UNKNOWN\n    Ports : 2 2   S S H     |   4 4 3   H T T P S   ", "x": -780.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.20", "image": "static/icons/unkhown.png", "label": "192.168.10.20", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.20 \n    MAC : 00:5f:67:75:e1:8f\n    Hostname : \n    Vendor : TPLINK:75:E1:8F\n    OS : UNKNOWN\n    Ports : 2 2   S S H     |   8 0   H T T P     |   4 4 3   H T T P S   ", "x": -660.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.21", "image": "static/icons/unkhown.png", "label": "192.168.10.21", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.21 \n    MAC : 00:5f:67:75:e1:93\n    Hostname : \n    Vendor : TPLINK:75:E1:93\n    OS : UNKNOWN\n    Ports : 2 2   S S H     |   8 0   H T T P     |   4 4 3   H T T P S   ", "x": -540.0, "y": 770}, {"color": "pink", "id": "192.168.10.40", "image": "static/icons/camera.png", "label": " Camera", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.40 \n    MAC : 24:0f:9b:03:cd:85\n    Hostname : \n    Vendor : HIKVISIONDIG:03:CD:85\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   5 5 4   R T S P   ", "x": -1540.0, "y": -230}, {"color": "pink", "id": "192.168.10.41", "image": "static/icons/camera.png", "label": " Camera", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.41 \n    MAC : 3c:1b:f8:6c:2a:45\n    Hostname : \n    Vendor : HIKVISIONDIG:6C:2A:45\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   5 5 4   R T S P   ", "x": -1420.0, "y": -230}, {"color": "brown", "id": "192.168.10.48", "image": "static/icons/nas.png", "label": " NAS", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.48 \n    MAC : 24:5e:be:5e:22:64\n    Hostname : NAS5E2264\n    Vendor : QNAP:5E:22:64\n    OS : UNKNOWN\n    Ports : 4 4 3   H T T P S     |   4 4 5   M I C R O S O F T - D S   ", "x": -420.0, "y": 770}, {"color": "brown", "id": "192.168.10.49", "image": "static/icons/nas.png", "label": " NAS", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.49 \n    MAC : 10:bf:48:8c:87:c3\n    Hostname : AS1004T-87C3\n    Vendor : ASUSTEKCOMPU:8C:87:C3\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -300.0, "y": 770}, {"color": "yellow", "id": "192.168.10.71", "image": "static/icons/printer.png", "label": " Printer", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.71 \n    MAC : 58:38:79:8d:ab:16\n    Hostname : RNP5838798DAB16\n    Vendor : RICOH:8D:AB:16\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S   ", "x": -180.0, "y": 770}, {"color": "yellow", "id": "192.168.10.72", "image": "static/icons/printer.png", "label": " Printer", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.72 \n    MAC : 58:38:79:99:fb:0c\n    Hostname : RNP58387999FB0C\n    Vendor : RICOH:99:FB:0C\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S   ", "x": -60.0, "y": 770}, {"color": "yellow", "id": "192.168.10.73", "image": "static/icons/printer.png", "label": " Printer", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.73 \n    MAC : 58:38:79:51:a1:72\n    Hostname : EXPLOIT88\n    Vendor : RICOH:51:A1:72\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S   ", "x": 60.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.74", "image": "static/icons/unkhown.png", "label": "192.168.10.74", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.74 \n    MAC : f8:b4:6a:68:33:7f\n    Hostname : HP68337F\n    Vendor : HEWLETTPACKA:68:33:7F\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S   ", "x": 180.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.101", "image": "static/icons/unkhown.png", "label": "192.168.10.101", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.101 \n    MAC : 70:b5:e8:6f:51:5b\n    Hostname : CPT-YASSINE\n    Vendor : DELL:6F:51:5B\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 300.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.104", "image": "static/icons/unkhown.png", "label": "192.168.10.104", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.104 \n    MAC : 70:b5:e8:6f:8f:fd\n    Hostname : EXPLOIT05\n    Vendor : DELL:6F:8F:FD\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 420.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.106", "image": "static/icons/unkhown.png", "label": "192.168.10.106", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.106 \n    MAC : e4:54:e8:cc:a2:eb\n    Hostname : COMPTA04\n    Vendor : DELL:CC:A2:EB\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 540.0, "y": 770}, {"color": "lime", "id": "192.168.10.108", "image": "static/icons/pc.png", "label": "PC-COMME05", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.108 \n    MAC : c0:25:a5:b4:a4:a9\n    Hostname : PC-COMME05\n    Vendor : DELL:B4:A4:A9\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 660.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.110", "image": "static/icons/unkhown.png", "label": "192.168.10.110", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.110 \n    MAC : c0:25:a5:cf:35:64\n    Hostname : DES-HIND-MAGANI\n    Vendor : DELL:CF:35:64\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 780.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.111", "image": "static/icons/unkhown.png", "label": "192.168.10.111", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.111 \n    MAC : e4:54:e8:cc:a4:32\n    Hostname : COMPTA03\n    Vendor : DELL:CC:A4:32\n    OS : UNKNOWN\n    Ports :  ", "x": 900.0, "y": 770}, {"color": "yellow", "id": "192.168.10.112", "image": "static/icons/printer.png", "label": " Printer", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.112 \n    MAC : 84:2a:fd:84:58:d8\n    Hostname : \n    Vendor : HP:84:58:D8\n    OS : UNKNOWN\n    Ports :  ", "x": 1020.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.113", "image": "static/icons/unkhown.png", "label": "192.168.10.113", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.113 \n    MAC : 70:b5:e8:5f:17:c4\n    Hostname : EXPLOIT04\n    Vendor : DELL:5F:17:C4\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 1140.0, "y": 770}, {"color": "lightgray", "id": "192.168.10.119", "image": "static/icons/unkhown.png", "label": "192.168.10.119", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.119 \n    MAC : 70:b5:e8:3c:c7:a6\n    Hostname : COMPTA01\n    Vendor : DELL:3C:C7:A6\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -1140.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.128", "image": "static/icons/unkhown.png", "label": "192.168.10.128", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.128 \n    MAC : 70:b5:e8:3f:7f:e2\n    Hostname : COMME04\n    Vendor : DELL:3F:7F:E2\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -1020.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.132", "image": "static/icons/unkhown.png", "label": "192.168.10.132", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.132 \n    MAC : d0:46:0c:a7:9f:ff\n    Hostname : BNAJAT\n    Vendor : DELL:A7:9F:FF\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -900.0, "y": 870}, {"color": "lime", "id": "192.168.10.139", "image": "static/icons/pc.png", "label": "PC-QUALITE", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.139 \n    MAC : 20:88:10:ae:b1:74\n    Hostname : PC-QUALITE\n    Vendor : DELL:AE:B1:74\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -780.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.141", "image": "static/icons/unkhown.png", "label": "192.168.10.141", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.141 \n    MAC : e4:54:e8:cc:a6:73\n    Hostname : \n    Vendor : DELL:CC:A6:73\n    OS : UNKNOWN\n    Ports :  ", "x": -660.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.143", "image": "static/icons/unkhown.png", "label": "192.168.10.143", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.143 \n    MAC : 6c:3c:8c:01:f8:92\n    Hostname : \n    Vendor : DELL:01:F8:92\n    OS : UNKNOWN\n    Ports :  ", "x": -540.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.131", "image": "static/icons/unkhown.png", "label": "192.168.10.131", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.131 \n    MAC : 2e:07:78:db:bc:58\n    Hostname : \n    Vendor : 2E:07:78:DB:BC:58\n    OS : UNKNOWN\n    Ports :  ", "x": -420.0, "y": 870}, {"color": "lime", "id": "192.168.10.147", "image": "static/icons/pc.png", "label": "DESKTOP-DOAI", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.147 \n    MAC : 20:88:10:ad:9a:7c\n    Hostname : DESKTOP-DOAI\n    Vendor : DELL:AD:9A:7C\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -300.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.152", "image": "static/icons/unkhown.png", "label": "192.168.10.152", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.152 \n    MAC : b8:52:e0:f8:18:ab\n    Hostname : \n    Vendor : B8:52:E0:F8:18:AB\n    OS : UNKNOWN\n    Ports :  ", "x": -180.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.157", "image": "static/icons/unkhown.png", "label": "192.168.10.157", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.157 \n    MAC : 00:15:5d:0a:67:0f\n    Hostname : \n    Vendor : MICROSOFT:0A:67:0F\n    OS : UNKNOWN\n    Ports : 2 2   S S H   ", "x": -60.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.158", "image": "static/icons/unkhown.png", "label": "192.168.10.158", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.158 \n    MAC : 70:b5:e8:41:09:7c\n    Hostname : COMPTA07\n    Vendor : DELL:41:09:7C\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 60.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.144", "image": "static/icons/unkhown.png", "label": "192.168.10.144", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.144 \n    MAC : ec:3c:bb:83:61:b5\n    Hostname : \n    Vendor : HUAWEIDEVICE:83:61:B5\n    OS : UNKNOWN\n    Ports :  ", "x": 180.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.150", "image": "static/icons/unkhown.png", "label": "192.168.10.150", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.150 \n    MAC : 44:5c:e9:9f:e3:48\n    Hostname : \n    Vendor : SAMSUNGELECT:9F:E3:48\n    OS : UNKNOWN\n    Ports :  ", "x": 300.0, "y": 870}, {"color": "lime", "id": "192.168.10.175", "image": "static/icons/pc.png", "label": "NOUH", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.175 \n    MAC : ac:f2:3c:d9:60:39\n    Hostname : NOUH\n    Vendor : AC:F2:3C:D9:60:39\n    OS : MICROSOFT WINDOWS 11 24H2 - 25H2\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": 420.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.161", "image": "static/icons/unkhown.png", "label": "192.168.10.161", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.161 \n    MAC : 8c:9f:3b:78:6d:12\n    Hostname : \n    Vendor : QINGDAOHISEN:78:6D:12\n    OS : UNKNOWN\n    Ports :  ", "x": 540.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.166", "image": "static/icons/unkhown.png", "label": "192.168.10.166", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.166 \n    MAC : 6e:92:b3:72:fc:22\n    Hostname : \n    Vendor : 6E:92:B3:72:FC:22\n    OS : UNKNOWN\n    Ports :  ", "x": 660.0, "y": 870}, {"color": "purple", "id": "192.168.10.200", "image": "static/icons/server.png", "label": "REP-CASSRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.200 \n    MAC : d0:94:66:27:bf:df\n    Hostname : REP-CASSRV\n    Vendor : DELL:27:BF:DF\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -1140.0, "y": 520}, {"color": "purple", "id": "192.168.10.201", "image": "static/icons/server.png", "label": "MSL-CASSRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.201 \n    MAC : 14:18:77:60:a5:2a\n    Hostname : MSL-CASSRV\n    Vendor : DELL:60:A5:2A\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -1020.0, "y": 520}, {"color": "purple", "id": "192.168.10.202", "image": "static/icons/server.png", "label": "MSL-CASSRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.202 \n    MAC : 14:18:77:60:a5:2b\n    Hostname : MSL-CASSRV\n    Vendor : DELL:60:A5:2B\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -900.0, "y": 520}, {"color": "purple", "id": "192.168.10.203", "image": "static/icons/server.png", "label": "MSL-CASSRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.203 \n    MAC : 14:18:77:60:a5:2c\n    Hostname : MSL-CASSRV\n    Vendor : DELL:60:A5:2C\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -780.0, "y": 520}, {"color": "purple", "id": "192.168.10.204", "image": "static/icons/server.png", "label": "MSL-CASSRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.204 \n    MAC : 14:18:77:60:a5:2d\n    Hostname : MSL-CASSRV\n    Vendor : DELL:60:A5:2D\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S   ", "x": -660.0, "y": 520}, {"color": "purple", "id": "192.168.10.210", "image": "static/icons/server.png", "label": "MSL-SRV", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.210 \n    MAC : 00:15:5d:0a:c9:05\n    Hostname : MSL-SRV\n    Vendor : MICROSOFT:0A:C9:05\n    OS : UNKNOWN\n    Ports : 5 3   D O M A I N     |   8 0   H T T P     |   4 4 3   H T T P S     |   4 4 5   M I C R O S O F T - D S     |   3 3 8 9   M S - W B T - S E R V E R   ", "x": -540.0, "y": 520}, {"color": "lightgray", "id": "192.168.10.165", "image": "static/icons/unkhown.png", "label": "192.168.10.165", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.165 \n    MAC : ea:c3:9a:84:bf:6b\n    Hostname : \n    Vendor : EA:C3:9A:84:BF:6B\n    OS : UNKNOWN\n    Ports :  ", "x": 780.0, "y": 870}, {"color": "purple", "id": "192.168.10.221", "image": "static/icons/server.png", "label": "LDI-SRV2", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.221 \n    MAC : 00:15:5d:0a:c9:07\n    Hostname : LDI-SRV2\n    Vendor : MICROSOFT:0A:C9:07\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   4 4 3   H T T P S     |   4 4 5   M I C R O S O F T - D S     |   3 3 8 9   M S - W B T - S E R V E R   ", "x": -420.0, "y": 520}, {"color": "cyan", "id": "192.168.10.222", "image": "static/icons/access_point.png", "label": " Access Point", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.222 \n    MAC : 00:15:5d:0a:c9:00\n    Hostname : MSL-APPSYS\n    Vendor : MICROSOFT:0A:C9:00\n    OS : UNKNOWN\n    Ports : 8 0   H T T P     |   3 3 8 9   M S - W B T - S E R V E R   ", "x": 900.0, "y": 870}, {"color": "purple", "id": "192.168.10.230", "image": "static/icons/server.png", "label": "MSL-BACKUP", "physics": false, "shape": "image", "title": " \n    IP : 192.168.10.230 \n    MAC : 34:17:eb:ee:40:b7\n    Hostname : MSL-BACKUP\n    Vendor : DELL:EE:40:B7\n    OS : UNKNOWN\n    Ports : 4 4 5   M I C R O S O F T - D S     |   3 3 8 9   M S - W B T - S E R V E R   ", "x": -300.0, "y": 520}, {"color": "lightgray", "id": "192.168.10.251", "image": "static/icons/unkhown.png", "label": "192.168.10.251", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.251 \n    MAC : 34:17:eb:ee:40:b9\n    Hostname : \n    Vendor : DELL:EE:40:B9\n    OS : UNKNOWN\n    Ports : 8 0   H T T P   ", "x": 1020.0, "y": 870}, {"color": "lightgray", "id": "192.168.10.253", "image": "static/icons/unkhown.png", "label": "192.168.10.253", "physics": false, "shape": "image", "size": 20, "title": " \n    IP : 192.168.10.253 \n    MAC : 14:18:77:62:73:2b\n    Hostname : \n    Vendor : DELL:62:73:2B\n    OS : UNKNOWN\n    Ports : 2 2   S S H     |   8 0   H T T P     |   4 4 3   H T T P S   ", "x": 1140.0, "y": 870}]);
+                  edges = new vis.DataSet([{"from": "internet", "to": "firewall"}, {"from": "firewall", "to": "switch1"}, {"from": "switch1", "to": "router"}, {"from": "router", "to": "grandstream"}, {"from": "grandstream", "to": "switch2"}, {"from": "switch2", "to": "switch3"}, {"from": "switch3", "to": "192.168.10.1"}, {"from": "switch3", "to": "192.168.10.4"}, {"from": "switch3", "to": "192.168.10.5"}, {"from": "switch3", "to": "192.168.10.10"}, {"from": "switch3", "to": "192.168.10.20"}, {"from": "switch3", "to": "192.168.10.21"}, {"from": "switch1", "to": "192.168.10.40"}, {"from": "switch1", "to": "192.168.10.41"}, {"from": "switch3", "to": "192.168.10.48"}, {"from": "switch3", "to": "192.168.10.49"}, {"from": "switch3", "to": "192.168.10.71"}, {"from": "switch3", "to": "192.168.10.72"}, {"from": "switch3", "to": "192.168.10.73"}, {"from": "switch3", "to": "192.168.10.74"}, {"from": "switch3", "to": "192.168.10.101"}, {"from": "switch3", "to": "192.168.10.104"}, {"from": "switch3", "to": "192.168.10.106"}, {"from": "switch3", "to": "192.168.10.108"}, {"from": "switch3", "to": "192.168.10.110"}, {"from": "switch3", "to": "192.168.10.111"}, {"from": "switch3", "to": "192.168.10.112"}, {"from": "switch3", "to": "192.168.10.113"}, {"from": "switch3", "to": "192.168.10.119"}, {"from": "switch3", "to": "192.168.10.128"}, {"from": "switch3", "to": "192.168.10.132"}, {"from": "switch3", "to": "192.168.10.139"}, {"from": "switch3", "to": "192.168.10.141"}, {"from": "switch3", "to": "192.168.10.143"}, {"from": "switch3", "to": "192.168.10.131"}, {"from": "switch3", "to": "192.168.10.147"}, {"from": "switch3", "to": "192.168.10.152"}, {"from": "switch3", "to": "192.168.10.157"}, {"from": "switch3", "to": "192.168.10.158"}, {"from": "switch3", "to": "192.168.10.144"}, {"from": "switch3", "to": "192.168.10.150"}, {"from": "switch3", "to": "192.168.10.175"}, {"from": "switch3", "to": "192.168.10.161"}, {"from": "switch3", "to": "192.168.10.166"}, {"from": "switch2", "to": "192.168.10.200"}, {"from": "switch2", "to": "192.168.10.201"}, {"from": "switch2", "to": "192.168.10.202"}, {"from": "switch2", "to": "192.168.10.203"}, {"from": "switch2", "to": "192.168.10.204"}, {"from": "switch2", "to": "192.168.10.210"}, {"from": "switch3", "to": "192.168.10.165"}, {"from": "switch2", "to": "192.168.10.221"}, {"from": "switch3", "to": "192.168.10.222"}, {"from": "switch2", "to": "192.168.10.230"}, {"from": "switch3", "to": "192.168.10.251"}, {"from": "switch3", "to": "192.168.10.253"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
