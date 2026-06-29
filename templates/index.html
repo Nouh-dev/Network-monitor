@@ -14,21 +14,7 @@
         <th>ports activé</th>
         <th>status port</th>
     </tr>
-    
-    {% for d in devices %}
-    <tr>
-        <td>{{ d.ip }}</td>
-        <td>{{ d.mac }}</td>
-        <td>{{ d.hostname }}</td>
-        <td>{{ d.status }}</td>
-        <td>{{ d.os_name }}</td>
-        <td>{{ d.vendor }}</td>
-        <td>{{ d.ports|safe }}</td>
-        <td>{{ d.status_port }} </td>
-    </tr>
-    
-    {% endfor %}
-    
+
 </table>
 </div>
 {% endif %}

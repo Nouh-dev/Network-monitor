@@ -14,12 +14,14 @@ cursor.execute("""
                os_name TEXT,
                vendor TEXT,
                ports TEXT,
-               status_port TEXT
+               status_port TEXT,
+               wifi TEXT,
+               network_name TEXT
                 )  
 """)
 
 
-def save_device(ip,mac,hostname,status,os_name,vendor,ports,status_port):
+def save_device(ip,mac,hostname,status,os_name,vendor,ports,status_port,network):
     conn = sqlite3.connect("network.db")
 
     cursor = conn.cursor()
@@ -29,13 +31,13 @@ def save_device(ip,mac,hostname,status,os_name,vendor,ports,status_port):
     if exists:
         cursor.execute("""
                         UPDATE assets
-                        SET mac = ? ,hostname = ?,status = ?,os_name = ? ,vendor=?, ports = ?, status_port=?
-                        WHERE ip=? """,(mac, hostname, status,os_name, vendor, ports, status_port, ip))
+                        SET mac = ? ,hostname = ?,status = ?,os_name = ? ,vendor=?, ports = ?, status_port=? , network_name = ?
+                        WHERE ip=? """,(mac, hostname, status,os_name, vendor, ports, status_port,network, ip))
     
     else:
         cursor.execute(""" 
-                    INSERT INTO assets(ip,mac,hostname,status,os_name,vendor,ports,status_port)
-                    VALUES (?,?,?,?,?,?,?,?)""",(ip,mac,hostname,status,os_name,vendor,ports,status_port))
+                    INSERT INTO assets(ip,mac,hostname,status,os_name,vendor,ports,status_port,network_name)
+                    VALUES (?,?,?,?,?,?,?,?,?)""",(ip,mac,hostname,status,os_name,vendor,ports,status_port,network))
     conn.commit()
     conn.close()
 

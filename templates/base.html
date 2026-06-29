@@ -17,12 +17,59 @@
         Start Scan
     </a>
 
+    <a href="/cartographie" class="scan-btn">
+        show schéma
+    </a>
+
     <br><br>
+        
+        {% block body %}
+        {% endblock %}
 
-    {% block body %}
-    {% endblock %}
+        <table border="1">
+          <thead>
+              <tr>
+                  <th>Num</th>
+                  <th>IP</th>
+                  <th>MAC</th>
+                  <th>Hostname</th>
+                  <th>Status</th>
+                  <th>OS</th>
+                  <th>Vendor</th>
+                  <th>ports activé</th>
+                  <th>status port</th>
+              </tr>
+          </thead>
+    
+          <tbody>
+              {% for device in devices %}
+              <tr>
+                  <td>{{ device[0] }}</td>
+                  <td>{{ device[1] }}</td>
+                  <td>{{ device[2] }}</td>
+                  <td>{{ device[3] }}</td>
+                  <td>{{ device[4] }}</td>
+                  <td>{{ device[5] }}</td>
+                  <td>{{ device[6] }}</td>
+                  <td>{{ device[7] }}</td>
+                  <td>{{ device[8] }}</td>
+                </tr>
+              {% endfor %}
 
-</div>
+            <script>
+                window.onload = function () {
 
+                fetch("/scan")
+                .then(response => response.text())
+                .then(data => {
+                    location.reload();
+            });
+    }
+    </script>
+          </tbody>
+      </table>
+        
+    </div>
+    
 </body>
 </html>
